@@ -1,13 +1,12 @@
 # Early alpha V0.1 (2020-06-16)
-- docs(developers): commit message format typo
-- docs($aria): get the docs working for the service
-- docs(*): fix spelling errors
-- chore(*): fix serving of URI-encoded files on code.angularjs.org
-- chore(package): fix scripts for latest Node 10.x on Windows
-- docs(angular.errorHandlingConfig): fix typo (wether --> whether)
-- docs(angular.copy): fix getter/setter formatting
-- chore(*): update copyright year to 2020
-- docs: add mention to changelog
-- docs: add mention to changelog
-- docs: release notes for 1.7.9
-- fix(angular.merge): do not merge proto property 
+- Getting started on a project
+## Features:
+- Made a bot greeting in the console
+- Added bot prefix $
+- Added command $clear
+- Added command $ban
+- Added command $kick
+- Added command $unban
+- Added command $time
+## Bug Fixes
+- Added commands access only with administrator rights
