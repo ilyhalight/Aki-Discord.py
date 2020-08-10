@@ -1,4 +1,4 @@
-// Output
+# Early alpha V0.1 (2020-06-16)
 - docs(developers): commit message format typo
 - docs($aria): get the docs working for the service
 - docs(*): fix spelling errors
