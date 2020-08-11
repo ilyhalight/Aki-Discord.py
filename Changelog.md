@@ -1,21 +1,23 @@
-# Alpha Version V0.9 (2020-08-11)
+# Alpha Version 0.9
+# (2020-08-11)
 - The bot has switched to alpha version
 - Big update coming soon
 ## Features:
 - Added logs to the console
 - Added alternative commands for $+rep
 - Added alternative commands for $leaderboard
-	
 ## Bug Fixed:	
 - fixed bug with 2 $fox commands in $help
 
-# Early alpha V0.8(2020-08-10)
+# Early alpha 0.8
+# (2020-08-10)
 ## Features:
 - Added command $ping
 - Added command $timeup
 
 
-# Early alpha V0.7.2 (2020-07-28)
+# 0.7.2 
+# (2020-07-28)
 ##Features:
 - Broke $clear
 ## Bug Fixed:
@@ -23,12 +25,14 @@
 - Fixed $clear
 
 
-# Early alpha V0.7.1 (2020-07-28)
+# 0.7.1 
+# (2020-07-28)
 ## Features:
 - Completed work on reworking the code
   
   
-# Early alpha V0.7 (2020-07-25)
+# Early alpha 0.7 
+# (2020-07-25)
 ## Features:
 - Added command $+Rep
 - Added command $leaderboard
@@ -38,7 +42,8 @@
 - Fixed bugs with $leaderboard, now shows the top from all servers where there is a bot
 
 
-# Early alpha V0.6 (2020-07-24)
+# Early alpha 0.6 
+# (2020-07-24)
 ## Features:
 - Added command $authors
 - Added command $fishing [lake/river/ocean]
@@ -64,7 +69,8 @@
 - Fixed bugs with $fishing
 
 
-# Early alpha V0.5 (2020-07-23)
+# Early alpha 0.5 
+# (2020-07-23)
 ## Features:
 - Removed command $queue
 - Removed command $next
@@ -77,7 +83,8 @@
 - Added description for $wiki
 
 
-# Early alpha V0.4 (2020-06-19) - (2020-07-11)
+# Early alpha 0.4 
+# (2020-06-19) - (2020-07-11)
 ## Features:
 - Added command $unmute
 - Added command $wiki
@@ -110,7 +117,8 @@
 - Removed command $count
 
 
-# Early alpha V0.3 (2020-06-18)
+# Early alpha 0.3 
+# (2020-06-18)
 ## Features:
 - Added $join
 - Added $leave
@@ -121,7 +129,8 @@
 - Added $repeat
 
 
-# Early alpha V0.2 (2020-06-17)
+# Early alpha 0.2
+# (2020-06-17)
 ## Features:
 - Added command $Help
 - Added command $Mute
@@ -131,7 +140,8 @@
 - Added autorole
 
 
-# Early alpha V0.1 (2020-06-16)
+# Early alpha 0.1 
+# (2020-06-16)
 - Getting started on a project
 ## Features:
 - Made a bot greeting in the console
