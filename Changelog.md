@@ -1,3 +1,17 @@
+# Alpha Version 0.9.2 (2020-10-15)
+- Bot development stopped because it switched to cogs
+
+# Alpha Version 0.9.1 (2020-09-10)
+## Features:
+- Added command for bot analytics	
+- Added command $reverse
+- Added command $daily (rewards)
+- Added command $translit
+- Added command $electric
+- Reworked $fishing
+## Bug Fixed:
+- Fixed member.name in logs
+  
 # Alpha Version 0.9 (2020-08-11)
 - The bot has switched to alpha version
 - Big update coming soon
@@ -13,8 +27,7 @@
 - Added command $ping
 - Added command $timeup
 
-
-# 0.7.2 (2020-07-28)
+# Early alpha 0.7.2 (2020-07-28)
 ##Features:
 - Broke $clear
 ## Bug Fixed:
@@ -22,7 +35,7 @@
 - Fixed $clear
 
 
-# 0.7.1 (2020-07-28)
+# Early alpha 0.7.1 (2020-07-28)
 ## Features:
 - Completed work on reworking the code
   
