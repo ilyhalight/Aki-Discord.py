@@ -27,13 +27,12 @@
 - Added command $ping
 - Added command $timeup
 
-# Early alpha 0.7.2 (2020-07-28)
-##Features:
+# Early alpha 0.7.2 (2020-07-29)
+## Features:
 - Broke $clear
 ## Bug Fixed:
 - Small bugs fixed 
 - Fixed $clear
-
 
 # Early alpha 0.7.1 (2020-07-28)
 ## Features:
