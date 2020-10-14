@@ -8,22 +8,23 @@
   - pip install wikipedia
   - pip install requests
   - pip install asyncio
+  - pip install pypresence (нужна для статуса)
 - Готово
 
 ## ШАГ 2
 ### Загрузка и настройка БОТА
-- Заходим в мой репозиторий https://github.com/ilyhalight/Aki-Discord.py
+- Заходим в мой репозиторий -> https://github.com/ilyhalight/Aki-Discord.py
 - Нажимаем кнопку "Code"
   - Нажимаем "Download ZIP"
 - Распаковываем в удобное место
 - С помощью текстового редактора открываем config.py
 - Находим строку: 'TOKEN': 'ТОКЕН БОТА'
-  - Меняем "ТОКЕН БОТА" на свой токен, его можно получить тут - https://discord.com/developers/applications/
+  - Меняем "ТОКЕН БОТА" на свой токен, его можно получить тут -> https://discord.com/developers/applications/
 
   
 ## ШАГ 3
 ### Установка ffmpeg
-- Заходим на сайт https://ffmpeg.org/
+- Заходим на сайт -> https://ffmpeg.org/
 - Нажимаем "Download"
 - Наводим на иконку вашей ОС
 - Нажимаем на появившуюся ссылку
@@ -48,10 +49,12 @@
 - Проверяем написав команду $help
 - Если команда отобразится, то у вас всё получилось
 
-
-
-
-
+## ШАГ 5
+### Статус бота в вашем статусе
+- Создаём приложение —> https://discord.com/developers/applications
+- Можно добавить свои картинки -> https://prnt.sc/uzg8ca
+- Предпросмотр конфигурации -> https://prnt.sc/uzg9bl
+- SS статуса-> https://prnt.sc/uzg9y3
 
 
 
