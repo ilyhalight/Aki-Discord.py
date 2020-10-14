@@ -22,12 +22,18 @@ import urllib.request
 import config
 import math
 import sqlite3
+import psutil as ps
+from Cybernator import Paginator
+from psutil import virtual_memory
 from config import settings
+from config import COLORS
 
 prefix = settings['PREFIX']
 
 client = commands.Bot(command_prefix = settings['PREFIX'])
 client.remove_command("help")
+queue = []
+queue1 = []
 
 
 connection = sqlite3.connect('server.db')
@@ -72,7 +78,7 @@ async def on_member_join( member ):
 	role3 = discord.utils.get (member.guild.roles , id = 722476594567970876) #ID Роли
 	await member.add_roles (role3)
 	if cursor.execute(f"SELECT id FROM users WHERE id = {member.id}").fetchone() is None:
-		cursor.execute(f"INSERT INTO users VALUES ('{member}', {member.id}, 0, 0, 1,)")
+		cursor.execute(f"INSERT INTO users VALUES ('{member}', {member.id}, 0, 0, 1)")
 		connection.commit()
 	else:
 		pass
@@ -265,8 +271,67 @@ async def __leaderboard(ctx):
 
     print(f'[Logs:economy] Список богачей сервера был успешно выведен | {prefix}leaderboard ')
 
+#Daily Rewards
+@client.command(aliases = ['Rewards', 'rewards', 'REWARDS', 'rEWARDS'])
+async def __daily(ctx, option = None):
+    if option == "Fame" or option == "fame" or option == "FAME" or option == "fAME":
+        if not str(ctx.author.id) in queue:
+            emb = discord.Embed(description=f'**{ctx.author}** Вы получили свои 1250 монет')
+            await ctx.send(embed= emb)
+            cursor.execute("UPDATE users SET cash = cash + 625 WHERE id = {}".format(ctx.author.id))	
+            connection.commit()
+            queue.append(str(ctx.author.id))
+            await asyncio.sleep(12*60)
+            queue.remove(str(ctx.author.id))
+            print(f'[Logs:economy] {ctx.author} получил свой ежедневный бонус | {prefix}daily ')
+        if str(ctx.author.id) in queue:
+            emb = discord.Embed(description=f'**{ctx.author}** Вы уже получили свою награду')
+            await ctx.send(embed= emb)
+            print(f'[Logs:economy] {ctx.author} попытался получить свой ежедневный бонус | {prefix}daily ')
+    if option == "Daily" or option == "daily" or option == "DAILY" or option == "dAILY":
+        if not str(ctx.author.id) in queue1:
+            emb = discord.Embed(description=f'**{ctx.author}** Вы получили свои 1250 монет')
+            await ctx.send(embed= emb)
+            cursor.execute("UPDATE users SET cash = cash + 1250 WHERE id = {}".format(ctx.author.id))	
+            connection.commit()
+            queue1.append(str(ctx.author.id))
+            await asyncio.sleep(12*60)
+            queue1.remove(str(ctx.author.id))
+            print(f'[Logs:economy] {ctx.author} получил свой ежедневный бонус | {prefix}leaderboard ')
+        if str(ctx.author.id) in queue1:
+            emb = discord.Embed(description=f'**{ctx.author}** Вы уже получили свою награду')
+            await ctx.send(embed= emb)
+            print(f'[Logs:economy] {ctx.author} попытался получить свой ежедневный бонус | {prefix}daily ')			
+    else:
+        await ctx.message.add_reaction('❌')	
+        emb = discord.Embed( title = "ОШИБКА❗", colour = discord.Color.red() )
 
+        emb.add_field( name = "Выберите награду!", value = "Fame/Daily")
+        emb.set_author(name = client.user.name, icon_url = client.user.avatar_url)
+        await ctx.send ( embed = emb)
+        print(f"[Logs:Error] Необходимо выбрать награду | {prefix}daily")
 
+#Gender selection
+#@client.command(aliases = ['gender'])
+#async def __gender(ctx, option = None):
+#	if option == "Female" or option == "female" or option == "FEMALE" or option == "fEMALE":
+#		await ctx.send(f"Вы успешно сменили свой пол на женский")
+#		await ctx.message.add_reaction('✅')
+#		cursor.execute("UPDATE users SET gender = Female WHERE id = {}".format(ctx.author.id))	
+#		connection.commit()
+#		print(f'[Logs:Marry] {ctx.author} успешно сменил свой пол на женский')
+#	if option == "Male" or option == "male" or option == "MALE" or option == "mALE":
+#		await ctx.send(f"Вы успешно сменили свой пол на мужской")
+#		await ctx.message.add_reaction('✅')
+#		cursor.execute("UPDATE users SET gender = Male WHERE id = {}".format(ctx.author.id))	
+#		connection.commit()
+#		print(f'[Logs:Marry] {ctx.author} успешно сменил свой пол на мужской')    
+
+#@client.command(aliases = ['genderinfo'])
+#async def __genderinfo(ctx):  
+#		await ctx.send(embed = discord.Embed(
+#			description = f"""Гендер **{ctx.author}** - **{cursor.execute("SELECT gender FROM users WHERE id = {}".format(ctx.author.id)).fetchone()[0]} **"""
+#		))	
 #=========================INFORMATION=============================
 #help
 @client.command (aliases=['хелп', 'хЕЛП', 'ХЕЛП', 'Хелп', 'команды', 'Команды', 'КОМАНДЫ', 'кОМАНДЫ', 'commands', 'Commands', 'COMMANDS', 'cOMMANDS', 'HELP', 'hELP', 'Help', 'help'])
@@ -277,10 +342,10 @@ async def __help (ctx):
 			emb.add_field( name = "Информация", value = f"`{prefix}хелп` `{prefix}инфо` `{prefix}сервер` `{prefix}профиль` `{prefix}авторы` ", inline=False)
 			emb.add_field( name = "Модерирование", value = f"`{prefix}мут` `{prefix}размут` `{prefix}бан` `{prefix}кик` `{prefix}очистить` ", inline=False)
 			emb.add_field( name = "Музыка", value = f"`{prefix}плей` `{prefix}видео` `{prefix}скип` `{prefix}очередь` `{prefix}повтор` `{prefix}пауза` `{prefix}продолжить` ", inline=False)
-			emb.add_field( name = "Экономика", value = f"`{prefix}баланс` `{prefix}вознаграждение` `{prefix}отнять` `{prefix}добавить-магазин` `{prefix}удалить-магазин` `{prefix}магазин` `{prefix}купить` `форбс` `+rep`", inline=False)
+			emb.add_field( name = "Экономика", value = f"`{prefix}баланс` `{prefix}вознаграждение` `{prefix}отнять` `{prefix}добавить-магазин` `{prefix}удалить-магазин` `{prefix}магазин` `{prefix}купить` `{prefix}форбс` `{prefix}daily` `{prefix}+rep`", inline=False)
 			emb.add_field( name = "Действие", value = f"`{prefix}рыбалка` `{prefix}сантехник` ", inline=False)
 			emb.add_field( name = "Весёлое", value = f"`{prefix}монетка` `{prefix}шар` `{prefix}битва` `{prefix}кнб` `{prefix}лис` `{prefix}кот` `{prefix}пёс` `{prefix}панда` `{prefix}птица` ", inline=False)
-			emb.add_field( name = "Утилиты", value = f"`{prefix}аватар` `{prefix}ранд` `{prefix}вики` `{prefix}время` `{prefix}эмоция` `{prefix}вычислить` `{prefix}пинг` `{prefix}времязапуска`", inline=False)
+			emb.add_field( name = "Утилиты", value = f"`{prefix}аватар` `{prefix}ранд` `{prefix}вики` `{prefix}время` `{prefix}эмоция` `{prefix}вычислить` `{prefix}реверс` `{prefix}транслит` `{prefix}пинг` `{prefix}аналитика` `{prefix}времязапуска`", inline=False)
 			emb.add_field( name = "ПОДДЕРЖКА", value = f"Нашли ошибку? \n Обратитесь {settings['CREATOR']} в лс!", inline=False)
 			emb.set_thumbnail(url = client.user.avatar_url)
 			emb.set_footer( icon_url = ctx.guild.owner.avatar_url, text = f"{settings['CREATOR NAME']} © Copyright 2020 | Все права защищены"   )
@@ -639,6 +704,121 @@ async def __timeup(ctx):
 	await ctx.send(f"{msg}")    
 	print(f"[Logs:utils] Информация о времени запуска бота выведена | {prefix}timeup")
 	print(f"[Logs:utils] {msg} | {prefix}timeup")
+
+
+@client.command(aliases = ['транслит', 'Транслит', 'ТРАНСЛИТ', 'тРАНСЛИТ', 'Translit', 'translit', 'TRANSLIT', 'tRANSLIT'])
+async def __translit(ctx,*,message=None):
+  a = {"q":"й","w":"ц","e":"у","r":"к","t":"е","y":"н","u":"г","i":"ш","o":"щ","p":"з","[":"х","{":"х","}":"ъ","]":"ъ","a":"ф","s":"ы","d":"в","f":"а","g":"п","h":"р","j":"о","k":"л","l":"д",":":"ж",";":"ж",'"':"э","'":"э","z":"я","x":"ч","c":"с","v":"м","b":"и","n":"т","m":"ь","<":"б",",":"б",">":"ю",".":"ю","?":",","/":".","`":"ё","~":"ё"," ":" "}
+  if message is None:
+    await ctx.send("Введите сообщение!")
+    print(f'[Logs:utils] Аргументы не были введены | {prefix}translit')
+  else:
+    itog = ""
+    errors = ""
+    for i in message:
+      if i.lower() in a:
+        itog += a[i.lower()]
+      else:
+        errors += f"`{i}` "
+    if len(errors) <= 0:
+      errors_itog=""
+    else:
+      errors_itog=f"\nНепереведенные символы: {errors}"
+      print(f"[Logs:utils] [Warning] Перевод содержит непереводимые символы | {prefix}translit")
+
+    if len(itog) <= 0:
+      itog_new= "Перевода нет!"
+      print(f"[Logs:utils] [Error] Не удалось перевести сообщение | {prefix}translit")
+    else:
+      itog_new=f"Перевод: {itog}"
+      print(f"[Logs:utils] Команда была успешно использована | {prefix}translit")
+    await ctx.send(f"{itog_new}{errors_itog}")	
+
+
+@client.command(aliases = ['Reverse', 'reverse', 'REVERSE', 'rEVERSE', 'Реверс', 'реверс', 'РЕВЕРС', 'рЕВЕРС'])
+async def __reverse(ctx, *, text: str):
+
+    t_rev = text[::-1].replace("@", "@\u200B").replace("&", "&\u200B")
+    print(f"[Logs:utils] Команда была успешно использована | {prefix}reverse")
+    await ctx.send(f"{t_rev}")    
+
+async def bytes2human(number, typer=None):
+    # Пример Работы Этой Функции перевода чисел:
+    # >> bytes2human(10000)
+    # >> '9.8K'
+    # >> bytes2human(100001221)
+    # >> '95.4M'
+
+    if typer == "system":
+        symbols = ('KБ', 'МБ', 'ГБ', 'TБ', 'ПБ', 'ЭБ', 'ЗБ', 'ИБ')  # Для перевода в Килобайты, Мегабайты, Гигобайты, Террабайты, Петабайты, Петабайты, Эксабайты, Зеттабайты, Йоттабайты
+    else:
+        symbols = ('K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')  # Для перевода в обычные цифры (10k, 10MM)
+
+    prefix = {}
+
+    for i, s in enumerate(symbols):
+        prefix[s] = 1 << (i + 1) * 10
+
+    for s in reversed(symbols):
+        if number >= prefix[s]:
+            value = float(number) / prefix[s]
+            return '%.1f%s' % (value, s)
+
+    return f"{number}B"
+
+def bytes2human(number, typer=None):
+    if typer == "system":
+        symbols = ('KБ', 'МБ', 'ГБ', 'TБ', 'ПБ', 'ЭБ', 'ЗБ', 'ИБ')  # Для перевода в Килобайты, Мегабайты, Гигобайты, Террабайты, Петабайты, Петабайты, Эксабайты, Зеттабайты, Йоттабайты
+    else:
+        symbols = ('K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')  # Для перевода в обычные цифры (10k, 10MM)
+
+    prefix = {}
+
+    for i, s in enumerate(symbols):
+        prefix[s] = 1 << (i + 1) * 10
+
+    for s in reversed(symbols):
+        if number >= prefix[s]:
+            value = float(number) / prefix[s]
+            return '%.1f%s' % (value, s)
+
+    return f"{number}B"
+
+@client.command(aliases = ['analytics', 'Analytics', 'ANALYTICS', 'aNALYTICS', 'Аналитика', 'аналитика', 'АНАЛИТИКА', 'аНАЛИТИКА'])
+async def __analytics(ctx):
+	mem = ps.virtual_memory()
+	ping = client.ws.latency
+
+	ping_emoji = "🟩🔳🔳🔳🔳"
+	ping_list = [
+		{"ping": 0.00000000000000000, "emoji": "🟩🔳🔳🔳🔳"},
+		{"ping": 0.10000000000000000, "emoji": "🟧🟩🔳🔳🔳"},
+		{"ping": 0.15000000000000000, "emoji": "🟥🟧🟩🔳🔳"},
+		{"ping": 0.20000000000000000, "emoji": "🟥🟥🟧🟩🔳"},
+		{"ping": 0.25000000000000000, "emoji": "🟥🟥🟥🟧🟩"},
+		{"ping": 0.30000000000000000, "emoji": "🟥🟥🟥🟥🟧"},
+		{"ping": 0.35000000000000000, "emoji": "🟥🟥🟥🟥🟥"}
+	]
+	for ping_one in ping_list:
+		if ping <= ping_one["ping"]:
+			ping_emoji = ping_one["emoji"]
+			break	
+
+	emb=discord.Embed(title="Нагрузка бота")
+	emb.add_field(name='Использование CPU',
+						value=f'В настоящее время используется: {ps.cpu_percent()}%',
+						inline=True)
+	emb.add_field( name = 'Использование RAM', value = f'Доступно: {bytes2human(mem.available, "system")}\n'
+								f'Используется: {bytes2human(mem.used, "system")} ({mem.percent}%)\n'
+								f'Всего: {bytes2human(mem.total, "system")}',inline=True)
+	emb.add_field(name='Пинг Бота',
+						value=f'Пинг: {ping * 1000:.0f}ms\n'
+							f'`{ping_emoji}`',
+						inline=True)																	
+	emb.set_footer( icon_url = ctx.guild.owner.avatar_url, text = f"{settings['CREATOR NAME']} © Copyright 2020 | Все права защищены")
+	await ctx.send( embed = emb )
+	print(f"[Logs:info] Информация о нагрузке была выведена | {prefix}analytics")  
+#embed.set_footer(text=f"{round(virtual_memory().used /1024/1024/1024, 2)} GB out of {round(ram /1024/1024/1024, 2)} GB")
 #===========================MUSIC=================================
 # Join in voice chat
 @client.command(aliases=['J', 'j', 'JOIN', 'Join', 'jOIN', 'join', 'ПОДКЛЮЧИТЬСЯ', 'Подключиться', 'пОДКЛЮЧИТЬСЯ', 'подключиться'])
@@ -798,8 +978,6 @@ async def video(ctx, title=None):
             i += 1 
 
         print(f"[Logs:music] Ссылка на видео была выведена | {prefix}video")
-
-
 
 #===========================FUNNY=================================
 #dog
@@ -973,7 +1151,6 @@ async def __battle( ctx, member: discord.Member = None ):
             await ctx.send( embed = emb )
             print(f"[Logs:funny] В перестрелке победил {member} | {prefix}battle")
 
-
 #=================ROLE=PLAY==================#
 #fishing
 @client.command(aliases = ["Fishing", "FISHING", "fISHING", 'fishing',"Рыбалка", "рыбалка", "РЫБАЛКА", "рЫБАЛКА"])
@@ -1022,7 +1199,7 @@ async def __fishing(ctx, *, mess):
 
 
 @client.command(aliases = ['Электрик', 'электрик', 'ЭЛЕКТРИК', 'эЛЕКТРИК', 'electric', 'eLECTRIC', 'Electric', 'ELECTRIC'])
-async def work(ctx):
+async def __electric(ctx):
   #делаем переменную rand и рандомное число
     rand = random.randint(300, 1200)
   #для разнообразия я решил сделать несколько вариантов сообщения по зарплату
@@ -1046,8 +1223,7 @@ async def work(ctx):
         await ctx.send(f"Ты блестяще поработал сантехником и заработал всего лишь {rand} :moneybag: ")
         cursor.execute("UPDATE users SET cash = cash + {} WHERE id = {}".format(rand, ctx.author.id))
         connection.commit()
-
-
+	
 #======================FOR==ADMINISTARION=========================#
 #Команда на смену статуса (Играет в ...) 
 @client.command( aliases = ['Statgames', 'STATGAMES', 'sTATGAMES', 'statgames', 'ИГРАЕТ В', 'играет в', 'Играет в', 'иГРАЕТ В'])
@@ -1374,7 +1550,7 @@ async def remove_shop_error(ctx, error):
 		emb.set_thumbnail(url = client.user.avatar_url)
 		emb.set_footer( icon_url = ctx.guild.owner.avatar_url, text = f"{settings['CREATOR NAME']} © Copyright 2020 | Все права защищены"   )
 		await ctx.send ( embed = emb)	
-		print(f"[Logs:Error] [Ошибка доступа] Пользователь [{ctx.author}] попытался удалить роль с магазина | {prefix}reward")			
+		print(f"[Logs:Error] [Ошибка доступа] Пользователь [{ctx.author}] попытался удалить роль с магазина | {prefix}reward")
 #===========================AWAIT=================================
 
 #new play !!!! (idk how to fix it)
